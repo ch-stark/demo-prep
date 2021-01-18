@@ -75,7 +75,7 @@ spec:
                     - apiGroups: ["apps"]
                       kinds: ["Deployment"]
                   namespaces:
-                    - openshift-monitoring     
+                    - deploymenttest     
                 parameters:
                   min: 1
   - objectDefinition:
