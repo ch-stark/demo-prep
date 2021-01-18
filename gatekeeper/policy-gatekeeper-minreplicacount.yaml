@@ -77,7 +77,7 @@ spec:
                   namespaces:
                     - openshift-monitoring     
                 parameters:
-                  min: 5
+                  min: 1
   - objectDefinition:
       apiVersion: policy.open-cluster-management.io/v1
       kind: ConfigurationPolicy
