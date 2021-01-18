@@ -30,7 +30,7 @@ spec:
                 kind: ManagedCluster
                 metadata:
                   labels:
-                    profile: demo
+                    environment: dev
                   name: local-cluster
                 spec:
                   hubAcceptsClient: true
