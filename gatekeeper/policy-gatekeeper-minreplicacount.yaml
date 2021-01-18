@@ -74,8 +74,6 @@ spec:
                   kinds:
                     - apiGroups: ["apps"]
                       kinds: ["Deployment"]
-                  namespaces:
-                    - openshift-monitoring     
                 parameters:
                   min: 5
 ---
