@@ -96,10 +96,10 @@ spec:
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
 metadata:
-  name: binding-policy-gatekeeper
+  name: binding-gatekeeper-minreplicacount
   namespace: policies
 placementRef:
-  name: placement-policy-gatekeeper
+  name: placement-gatekeeper-minreplicacount
   kind: PlacementRule
   apiGroup: apps.open-cluster-management.io
 subjects:
@@ -110,7 +110,7 @@ subjects:
 apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
 metadata:
-  name: placement-policy-gatekeeper
+  name: placement-gatekeeper-minreplicacount
   namespace: policies
 spec:
   clusterConditions:
