@@ -95,7 +95,7 @@ spec:
                 namespace: openshift-gatekeeper-system # set it to the actual namespace where gatekeeper is running if different
                 annotations:
                   constraint_action: deny
-                  constraint_kind: k8sminreplicacount
+                  constraint_kind: K8sMinReplicaCount
                   constraint_name: deployment-must-have-min-replicas
                   event_type: violation                  
               
