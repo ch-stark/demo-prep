@@ -75,7 +75,7 @@ spec:
                   - apiGroups: ["apps"]
                     kinds: ["Deployment"]
               parameters:
-                min: 2
+                min: 5
 ---
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
