@@ -58,4 +58,4 @@ spec:
     type: ManagedClusterConditionAvailable
   clusterSelector:
     matchExpressions:
-      - {key: name, env: In, values: ["local-cluster"]}
+      - {key: name, environment: In, values: ["dev"]}
