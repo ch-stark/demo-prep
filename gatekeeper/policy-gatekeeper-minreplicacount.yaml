@@ -63,21 +63,21 @@ spec:
         exclude: ["kube-*"]
         include: ["default"]
         object-templates:
-        - complianceType: musthave
-          objectDefinition:
-            apiVersion: constraints.gatekeeper.sh/v1beta1
-            kind: K8sMinReplicaCount
-            metadata:
-              name: deployment-must-have-min-replicas
-            spec:
-              match:
-                kinds:
-                  - apiGroups: ["apps"]
-                    kinds: ["Deployment"]
-                namespaces:
-                      - openshift-monitoring     
-              parameters:
-                min: 5
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: constraints.gatekeeper.sh/v1beta1
+              kind: K8sMinReplicaCount
+              metadata:
+                name: deployment-must-have-min-replicas
+              spec:
+                match:
+                  kinds:
+                    - apiGroups: ["apps"]
+                      kinds: ["Deployment"]
+                  namespaces:
+                    - openshift-monitoring     
+                parameters:
+                  min: 5
 ---
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
