@@ -1,0 +1,74 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: policy-namespace
+  namespace: policies
+  annotations:
+    policy.open-cluster-management.io/standards: NIST-CSF
+    policy.open-cluster-management.io/categories: PR.IP Information Protection Processes and Procedures
+    policy.open-cluster-management.io/controls: PR.IP-1 Baseline Configuration
+spec:
+  remediationAction: enforce
+  disabled: false
+  policy-templates:
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: policy-gatekeeper-exclude-namespaces
+      spec:
+        remediationAction: inform
+        severity: low
+        namespaceSelector:
+          exclude:
+            - kube-*
+          include:
+            - default
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: config.gatekeeper.sh/v1alpha1
+              kind: Config
+              metadata:
+                name: config
+                namespace: openshift-gatekeeper-system
+              spec:
+                match:
+                  - excludedNamespaces:
+                      - hive
+                      - kube-system
+                      - openshift-monitoring
+                      - openshift-gatekeeper-system
+                      - open-cluster-management-agent
+                      - open-cluster-management
+                      - open-cluster-management-agent-addon
+                    processes:
+                      - '*'
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-policy-namespace
+  namespace: policies
+placementRef:
+  name: placement-policy-namespace
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+- name: policy-namespace
+  kind: Policy
+  apiGroup: policy.open-cluster-management.io
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: placement-policy-namespace
+  namespace: policies
+spec:
+  clusterConditions:
+  - status: "True"
+    type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      []  # selects all clusters if not specified
+
