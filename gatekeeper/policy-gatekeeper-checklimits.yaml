@@ -1,0 +1,135 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  name: policy-gatekeeper-checklimits
+  namespace: policies
+  annotations:
+    policy.open-cluster-management.io/standards: NIST, FISMA, NIST-CSF
+    policy.open-cluster-management.io/categories: CM Configuration Management, PR.IP Information Protection Processes and Procedures
+    policy.open-cluster-management.io/controls: CM-2 Baseline Configuration, PR.IP-1 Baseline Configuration
+spec:
+  remediationAction: enforce
+  disabled: false
+  policy-templates:
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: policy-gatekeeper-checklimits
+      spec:
+        remediationAction: inform # will be overridden by remediationAction in parent policy
+        severity: low
+        namespaceSelector:
+          exclude: ["kube-*"]
+          include: ["default"]
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: templates.gatekeeper.sh/v1beta1
+              kind: ConstraintTemplate
+              metadata:
+                name: k8schecklimitscontainers
+              spec:
+                crd:
+                  spec:
+                    names:
+                      kind: K8sCheckLimitsContainers
+                    validation:
+                      # Schema for the `parameters` field
+                      openAPIV3Schema:
+                        properties:
+                          min:
+                            type: integer
+                targets:
+                  - target: admission.k8s.gatekeeper.sh
+                    rego: |
+                      package kubernetes.quota
+
+                      #Deny a Pod if its total resource memory limit is greater than 1T
+                      deny[msg] {
+                        input.object.kind == "Pod"
+                        all_mem := [convert(x) | x:= input.object.spec.containers[_].resources.limits.memory]
+                        total := sum(all_mem)
+                        total > 1e12
+                      }  
+                      convert(str) = result {
+                        endswith(str, "G") 
+                        num_str := substring(str, 0, count(str) -2) 
+                        num := to_number(num_str)
+                        result := num * 1e9 
+                      }
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: policy-gatekeeper-checklimits2
+      spec:
+        remediationAction: inform # will be overridden by remediationAction in parent policy
+        severity: low
+        namespaceSelector:
+          exclude: ["kube-*"]
+          include: ["default"]
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: constraints.gatekeeper.sh/v1beta1
+              kind: K8sMinReplicaCount
+              metadata:
+                name: pods-must-have-correct-memory-settings
+              spec:
+                match:
+                  kinds:
+                    - apiGroups: ["apps"]
+                      kinds: ["Pods"]
+                  namespaces:
+                    - deploymenttest     
+  - objectDefinition:
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: policy-gatekeeper-admission-memory
+      spec:
+        remediationAction: inform # will be overridden by remediationAction in parent policy
+        severity: low
+        object-templates:
+          - complianceType: mustnothave
+            objectDefinition:
+              apiVersion: v1
+              kind: Event
+              metadata:
+                namespace: openshift-gatekeeper-system # set it to the actual namespace where gatekeeper is running if different
+                annotations:
+                  constraint_action: deny
+                  constraint_kind: K8sCheckLimitsContainers
+                  constraint_name: k8schecklimitscontainers
+                  event_type: violation                  
+              
+     
+                  
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-gatekeeper-checklimits
+  namespace: policies
+placementRef:
+  name: placement-gatekeeper-checklimits
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+- name: policy-gatekeeper-checklimits
+  kind: Policy
+  apiGroup: policy.open-cluster-management.io
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: placement-gatekeeper-checklimits
+  namespace: policies
+spec:
+  clusterConditions:
+  - status: "True"
+    type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - {key: name, operator: In, values: ["local-cluster"]}
