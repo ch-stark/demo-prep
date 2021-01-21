@@ -44,7 +44,18 @@ spec:
                     environment: prod
                   name: east2
                 spec:
-                  hubAcceptsClient: true                  
+                  hubAcceptsClient: true   
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: cluster.open-cluster-management.io/v1
+                kind: ManagedCluster
+                metadata:
+                  labels:
+                    deploy: all 
+                    environment: prod
+                  name: east1
+                spec:
+                  hubAcceptsClient: true  
                   
 ---
 apiVersion: policy.open-cluster-management.io/v1
