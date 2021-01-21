@@ -79,6 +79,23 @@ spec:
                 parameters:
                   min: 5
   - objectDefinition:
+    apiVersion: policy.open-cluster-management.io/v1
+    kind: ConfigurationPolicy
+    metadata:
+      name: policy-gatekeeper-audit
+    spec:
+      remediationAction: inform # will be overridden by remediationAction in parent policy
+      severity: low
+      object-templates:
+        - complianceType: musthave
+          objectDefinition:
+            apiVersion: constraints.gatekeeper.sh/v1beta1
+            kind: K8sMinReplicaCount
+            metadata:
+              name: deployment-must-have-min-replicas
+            status:
+              totalViolations: 0                
+  - objectDefinition:
       apiVersion: policy.open-cluster-management.io/v1
       kind: ConfigurationPolicy
       metadata:
