@@ -82,7 +82,7 @@ spec:
     apiVersion: policy.open-cluster-management.io/v1
     kind: ConfigurationPolicy
     metadata:
-      name: policy-gatekeeper-audit
+      name: policy-gatekeeper-minreplicacount
     spec:
       remediationAction: inform # will be overridden by remediationAction in parent policy
       severity: low
@@ -99,7 +99,7 @@ spec:
       apiVersion: policy.open-cluster-management.io/v1
       kind: ConfigurationPolicy
       metadata:
-        name: policy-gatekeeper-admission-replic
+        name: policy-gatekeeper-admission-minreplicacount
       spec:
         remediationAction: inform # will be overridden by remediationAction in parent policy
         severity: low
