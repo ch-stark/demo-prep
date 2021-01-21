@@ -15,7 +15,7 @@ spec:
       apiVersion: policy.open-cluster-management.io/v1
       kind: ConfigurationPolicy
       metadata:
-        name: policy-gatekeeper-prod-ns
+        name: policy-gatekeeper-contraint-minreplicacount
       spec:
         remediationAction: inform # will be overridden by remediationAction in parent policy
         severity: low
@@ -55,7 +55,7 @@ spec:
       apiVersion: policy.open-cluster-management.io/v1
       kind: ConfigurationPolicy
       metadata:
-        name: policy-gatekeeper-replicas
+        name: policy-gatekeeper-min-replicas
       spec:
         remediationAction: inform # will be overridden by remediationAction in parent policy
         severity: low
@@ -82,7 +82,7 @@ spec:
     apiVersion: policy.open-cluster-management.io/v1
     kind: ConfigurationPolicy
     metadata:
-      name: policy-gatekeeper-minreplicacount
+      name: policy-gatekeeper-minreplicacount-violations
     spec:
       remediationAction: inform # will be overridden by remediationAction in parent policy
       severity: low
