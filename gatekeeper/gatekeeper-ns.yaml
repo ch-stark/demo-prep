@@ -40,7 +40,6 @@ spec:
                       - kube-public
                       - openshift-kube-apiserver
                       - openshift-monitoring
-                      - openshift-gatekeeper-system
                       - open-cluster-management-agent
                       - open-cluster-management
                       - open-cluster-management-agent-addon
