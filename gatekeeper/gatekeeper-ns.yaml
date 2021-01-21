@@ -42,6 +42,8 @@ spec:
                       - open-cluster-management-agent
                       - open-cluster-management
                       - open-cluster-management-agent-addon
+                      - openshift-sdn
+                      - openshift-machine-config-operator 
                     processes:
                       - '*'
 ---
