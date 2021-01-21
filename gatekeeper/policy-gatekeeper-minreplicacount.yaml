@@ -17,11 +17,13 @@ spec:
       metadata:
         name: policy-gatekeeper-contraint-minreplicacount
       spec:
-        remediationAction: inform # will be overridden by remediationAction in parent policy
+        remediationAction: inform
         severity: low
         namespaceSelector:
-          exclude: ["kube-*"]
-          include: ["default"]
+          exclude:
+            - kube-*
+          include:
+            - default
         object-templates:
           - complianceType: musthave
             objectDefinition:
@@ -35,16 +37,16 @@ spec:
                     names:
                       kind: K8sMinReplicaCount
                     validation:
-                      # Schema for the `parameters` field
                       openAPIV3Schema:
                         properties:
                           min:
                             type: integer
                 targets:
                   - target: admission.k8s.gatekeeper.sh
-                    rego: |
+                    rego: >
                       package k8sminreplicacount
-                      violation[{"msg": msg, "details": {"missing_replicas": missing}}] {
+                      violation[{"msg": msg, "details": {"missing_replicas":
+                      missing}}] {
                         provided := input.review.object.spec.replicas
                         required := input.parameters.min
                         missing := required - provided
@@ -57,11 +59,13 @@ spec:
       metadata:
         name: policy-gatekeeper-min-replicas
       spec:
-        remediationAction: inform # will be overridden by remediationAction in parent policy
+        remediationAction: inform
         severity: low
         namespaceSelector:
-          exclude: ["kube-*"]
-          include: ["default"]
+          exclude:
+            - kube-*
+          include:
+            - default
         object-templates:
           - complianceType: musthave
             objectDefinition:
@@ -72,36 +76,38 @@ spec:
               spec:
                 match:
                   kinds:
-                    - apiGroups: ["apps"]
-                      kinds: ["Deployment"]
+                    - apiGroups:
+                        - apps
+                      kinds:
+                        - Deployment
                   namespaces:
-                    - deploymenttest     
+                    - deploymenttest
                 parameters:
                   min: 5
-  - objectDefinition:
-    apiVersion: policy.open-cluster-management.io/v1
-    kind: ConfigurationPolicy
-    metadata:
-      name: policy-gatekeeper-minreplicacount-violations
-    spec:
-      remediationAction: inform # will be overridden by remediationAction in parent policy
-      severity: low
-      object-templates:
-        - complianceType: musthave
-          objectDefinition:
-            apiVersion: constraints.gatekeeper.sh/v1beta1
-            kind: K8sMinReplicaCount
-            metadata:
-              name: deployment-must-have-min-replicas
-            status:
-              totalViolations: 0                
+  - objectDefinition: 
+      apiVersion: policy.open-cluster-management.io/v1
+      kind: ConfigurationPolicy
+      metadata:
+        name: policy-gatekeeper-minreplicacount-violations
+      spec:
+        remediationAction: inform
+        severity: low
+        object-templates:
+          - complianceType: musthave
+            objectDefinition:
+              apiVersion: constraints.gatekeeper.sh/v1beta1
+              kind: K8sMinReplicaCount
+              metadata:
+                name: deployment-must-have-min-replicas
+              status:
+                totalViolations: 0
   - objectDefinition:
       apiVersion: policy.open-cluster-management.io/v1
       kind: ConfigurationPolicy
       metadata:
         name: policy-gatekeeper-admission-minreplicacount
       spec:
-        remediationAction: inform # will be overridden by remediationAction in parent policy
+        remediationAction: inform
         severity: low
         object-templates:
           - complianceType: mustnothave
@@ -109,34 +115,31 @@ spec:
               apiVersion: v1
               kind: Event
               metadata:
-                namespace: openshift-gatekeeper-system # set it to the actual namespace where gatekeeper is running if different
+                namespace: openshift-gatekeeper-system
                 annotations:
                   constraint_action: deny
                   constraint_kind: K8sMinReplicaCount
                   constraint_name: deployment-must-have-min-replicas
-                  event_type: violation                  
-              
-              
-                  
+                  event_type: violation
 ---
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
 metadata:
-  name: binding-gatekeeper-minreplicacount
+  name: binding-policy-gatekeeper-min-replicacount
   namespace: policies
 placementRef:
-  name: placement-gatekeeper-minreplicacount
+  name: placement-policy-gatekeeper-min-replicacount
   kind: PlacementRule
   apiGroup: apps.open-cluster-management.io
 subjects:
-- name: policy-gatekeeper-minreplicacount
+- name: policy-gatekeeper-min-replicacount
   kind: Policy
   apiGroup: policy.open-cluster-management.io
 ---
 apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
 metadata:
-  name: placement-gatekeeper-minreplicacount
+  name: placement-policy-gatekeeper-min-replicacount
   namespace: policies
 spec:
   clusterConditions:
@@ -144,4 +147,4 @@ spec:
     type: ManagedClusterConditionAvailable
   clusterSelector:
     matchExpressions:
-      - {key: name, operator: In, values: ["local-cluster"]}
+      - {key: local-cluster, operator: In, values: ["true"]}
