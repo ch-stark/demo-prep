@@ -47,6 +47,8 @@ spec:
                       - openshift-sdn
                       - openshift-machine-config-operator 
                       - openshift-machine-api 
+                      - openshift-ingress-operator
+                      - openshift-ingress
                     processes:
                       - '*'
 ---
