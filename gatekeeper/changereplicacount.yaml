@@ -33,7 +33,7 @@ spec:
                 name: us-eu-region-clusters
                 namespace: reverse-words-region
               spec:
-                clusterReplicas: 2
+                clusterReplicas: 3
 ---
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
