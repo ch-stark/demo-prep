@@ -37,6 +37,8 @@ spec:
                   - excludedNamespaces:
                       - hive
                       - kube-system
+                      - kube-public
+                      - openshift-kube-apiserver
                       - openshift-monitoring
                       - openshift-gatekeeper-system
                       - open-cluster-management-agent
