@@ -44,8 +44,8 @@ spec:
                       - open-cluster-management
                       - open-cluster-management-agent-addon
                       - openshift-sdn
-                      - openshift-machine-config-operator 
-                      - openshift-machine-api 
+                      - openshift-machine-config-operator
+                      - openshift-machine-api
                       - openshift-ingress-operator
                       - openshift-ingress
                       - sdn-controller
@@ -80,4 +80,4 @@ spec:
     type: ManagedClusterConditionAvailable
   clusterSelector:
     matchExpressions:
-      - {key: name, environment: In, values: ["dev"]}
+      - {key: local-cluster, operator: In, values: ["true"]}
