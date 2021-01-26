@@ -80,6 +80,10 @@ spec:
                         - apps
                       kinds:
                         - Deployment
+                    - apiGroups:
+                        - autoscaling
+                      kinds:
+                        - Scale
                   namespaces:
                     - deploymenttest
                 parameters:
