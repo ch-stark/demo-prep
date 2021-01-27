@@ -1,7 +1,7 @@
 apiVersion: policy.open-cluster-management.io/v1
 kind: Policy
 metadata:
-  name: policy-engineering-label-cluster
+  name: policy-engineering-label-clusters
   annotations:
     policy.open-cluster-management.io/standards: NIST-CSF
     policy.open-cluster-management.io/categories: PR.IP Information Protection Processes and Procedures
@@ -14,7 +14,7 @@ spec:
         apiVersion: policy.open-cluster-management.io/v1
         kind: ConfigurationPolicy
         metadata:
-          name: policy-label-cluster
+          name: policy-label-clusters
         spec:
           remediationAction: inform
           severity: low
@@ -71,20 +71,20 @@ spec:
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
 metadata:
-  name: binding-policy-engineering-label-cluster
+  name: binding-engineering-label-clusters
 placementRef:
-  name: placement-policy-engineering-label-cluster
+  name: placement-engineering-label-clusters
   kind: PlacementRule
   apiGroup: apps.open-cluster-management.io
 subjects:
-- name: policy-engineering-label-cluster
+- name: policy-engineering-label-clusters
   kind: Policy
   apiGroup: policy.open-cluster-management.io
 ---
 apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
 metadata:
-  name: placement-policy-engineering-label-cluster
+  name: placement-engineering-label-clusters
 spec:
   clusterConditions:
   - status: "True"
