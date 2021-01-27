@@ -32,6 +32,7 @@ spec:
               metadata:
                 labels:
                   environment: dev
+                  deploy: all
                 name: local-cluster
               spec:
                 hubAcceptsClient: true
